@@ -1,9 +1,12 @@
 from string import ascii_lowercase
-from itertools import combinations
-from random import shuffle
+from itertools import combinations, permutations
+from random import shuffle, sample
 
 
-def generateKSat(k, m, n):
+def generateKSat(k, m, n, limit=None):
+    if limit is None:
+        limit = 10
+
     if 2 * n < k:
         raise ValueError("Invalid Constraints")
     positive_var = (list(ascii_lowercase))[:n]
@@ -11,13 +14,29 @@ def generateKSat(k, m, n):
     variables = positive_var + negative_var
 
     clauses = list(combinations(variables, k))
-    sets = list(combinations(clauses, m))
+    # tempSets = list(permutations(clauses, m))
 
-    shuffle(sets)
-    sets = sets[:5]
+    tempSets = []
 
-    for set in sets:
-        print(set)
+    i = 0
+
+    while i < limit:
+        c = sample(clauses, m)
+        if c not in tempSets:
+            i += 1
+            tempSets.append(list(c))
+
+    shuffle(tempSets)
+    tempSets = tempSets[:limit]
+
+    sets = []
+
+    for tempSet in tempSets:
+        temp = []
+        for clause in tempSet:
+            temp.append(list(clause))
+        sets.append(temp)
+    return sets
 
 
 if __name__ == '__main__':
@@ -25,4 +44,6 @@ if __name__ == '__main__':
     m = int(input("Enter the number of clauses: "))
     n = int(input("Enter the number of variables: "))
 
-    generateKSat(k, m, n)
+    sets = generateKSat(k, m, n)
+    for set in sets:
+        print(set)
