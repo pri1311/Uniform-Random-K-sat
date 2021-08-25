@@ -56,6 +56,35 @@ def func(node):
     return node.heuristic
 
 
+def hillClimbing(set, n, m):
+    assignment = getInitialAssignments(n)
+    heuristic = calcHeuristic(set, assignment)
+
+    maxHeuristic = heuristic
+
+    currNode = satNode(assignment, heuristic)
+
+    while True:
+        if currNode.heuristic == m:
+            return currNode.assignment
+
+        node = None
+
+        neigbors = generateNeigbors(currNode.assignment, n)
+
+        for neighbor in neigbors:
+            heuristic = calcHeuristic(set, neighbor)
+
+            if heuristic >= maxHeuristic:
+                node = neighbor
+                maxHeuristic = heuristic
+
+        if node is None:
+            return None
+
+        currNode = satNode(node, maxHeuristic)
+
+
 def beamSearch(set, w, n, m):
 
     assignment = getInitialAssignments(n)
@@ -78,6 +107,8 @@ def beamSearch(set, w, n, m):
         if currNode.heuristic == m:
             return currNode.assignment
 
+        # print(currNode.assignment, currNode.heuristic)
+
         neigbors = generateNeigbors(currNode.assignment, n)
         for neighbor in neigbors:
             if neighbor not in closed:
@@ -95,7 +126,7 @@ def beamSearch(set, w, n, m):
             neigbors = generateNeigbors(node.assignment, n)
             for neighbor in neigbors:
                 if neighbor not in closed:
-                    heuristic = calcHeuristic(set, assignment)
+                    heuristic = calcHeuristic(set, neighbor)
                     if len(open) == w:
                         if open[-1].heuristic <= heuristic:
                             open.pop()
@@ -114,31 +145,40 @@ if __name__ == '__main__':
     m = int(input("Enter the number of clauses: "))
     n = int(input("Enter the number of variables: "))
 
-    sets = generateKSat(k, m, n, 20)
-    for set in sets:
-        print()
-        print(set)
-        assign = getInitialAssignments(n)
-        print(assign)
-        heuristic = calcHeuristic(set, assign)
-        print(heuristic)
-        result = beamSearch(set, 3, n, m)
-        if result is not None:
-            print("\nSolution is: ", end="")
-            print(result)
-            print()
-        else:
-            print("Solution not found")
-    # set = [['b', 'c', 'C'], ['A', 'B', 'C'], ['c', 'A', 'B']]
-    # print(set)
-    # assign = getInitialAssignments(n)
-    # print(assign)
-    # heuristic = calcHeuristic(set, assign)
-    # print(heuristic)
-    # result = beamSearch(set, 3, n, m)
-    # if result is not None:
-    #     print("\nSolution is: ", end="")
-    #     print(result)
+    # sets = generateKSat(k, m, n, 20)
+    # for set in sets:
     #     print()
-    # else:
-    #     print("Solution not found")
+    #     print(set)
+    #     assign = getInitialAssignments(n)
+    #     print(assign)
+    #     heuristic = calcHeuristic(set, assign)
+    #     print(heuristic)
+    #     result = beamSearch(set, 3, n, m)
+    #     if result is not None:
+    #         print("\nSolution is: ", end="")
+    #         print(result)
+    #         print()
+    #     else:
+    #         print("Solution not found")
+    # Gives different solutions for beam search and Hill Climbing
+    # set = [['D', 'G', 'J'], ['C', 'H', 'I'], ['c', 'h', 'I'], ['c', 'i', 'J']]
+    set = [['b', 'B', 'C'], ['D', 'E', 'I'], ['a', 'd', 'B'], ['C', 'D', 'F']]
+    print(set)
+    assign = getInitialAssignments(n)
+    print(assign)
+    heuristic = calcHeuristic(set, assign)
+    print(heuristic)
+    result = hillClimbing(set, n, m)
+    if result is not None:
+        print("\nSolution is: ", end="")
+        print(result)
+        print()
+    else:
+        print("Solution not found")
+    result = beamSearch(set, 3, n, m)
+    if result is not None:
+        print("\nSolution is: ", end="")
+        print(result)
+        print()
+    else:
+        print("Solution not found")
