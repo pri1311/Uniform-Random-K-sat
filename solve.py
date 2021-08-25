@@ -140,6 +140,14 @@ def beamSearch(set, w, n, m):
     return None
 
 
+def variableNeigborhoodDescent(set, m, n):
+    pass
+
+
+def tabuSearch(set, m, n):
+    pass
+
+
 if __name__ == '__main__':
     k = int(input("Enter length of each clause: "))
     m = int(input("Enter the number of clauses: "))
@@ -162,7 +170,8 @@ if __name__ == '__main__':
     #         print("Solution not found")
     # Gives different solutions for beam search and Hill Climbing
     # set = [['D', 'G', 'J'], ['C', 'H', 'I'], ['c', 'h', 'I'], ['c', 'i', 'J']]
-    set = [['b', 'B', 'C'], ['D', 'E', 'I'], ['a', 'd', 'B'], ['C', 'D', 'F']]
+    set = [['b', 'B', 'C'], ['D', 'E', 'I'], [
+        'a', 'd', 'B'], ['C', 'D', 'F']]  # 3 4 10
     print(set)
     assign = getInitialAssignments(n)
     print(assign)
@@ -182,3 +191,6 @@ if __name__ == '__main__':
         print()
     else:
         print("Solution not found")
+
+
+# 2 6 5
