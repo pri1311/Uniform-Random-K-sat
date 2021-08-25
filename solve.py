@@ -35,7 +35,7 @@ def getInitialAssignments(n):
     return assignment
 
 
-def generateNeigbors(old_assignment, n):
+def generateNeighbors(old_assignment, n):
     positive_var = (list(ascii_lowercase))[:n]
 
     neighbors = []
@@ -48,6 +48,55 @@ def generateNeigbors(old_assignment, n):
             1 - new_assignment[positive_var[i].upper()])
 
         neighbors.append(new_assignment)
+
+    return neighbors
+
+
+def generateNeighbors2(old_assignment, n):
+    positive_var = (list(ascii_lowercase))[:n]
+
+    neighbors = []
+
+    for i in range(0, n):
+        for j in range(i + 1, n):
+            new_assignment = old_assignment.copy()
+            new_assignment[positive_var[i]] = abs(
+                1 - new_assignment[positive_var[i]])
+            new_assignment[positive_var[i].upper()] = abs(
+                1 - new_assignment[positive_var[i].upper()])
+            new_assignment[positive_var[j]] = abs(
+                1 - new_assignment[positive_var[i]])
+            new_assignment[positive_var[j].upper()] = abs(
+                1 - new_assignment[positive_var[i].upper()])
+
+            neighbors.append(new_assignment)
+
+    return neighbors
+
+
+def generateNeighbors3(old_assignment, n):
+    positive_var = (list(ascii_lowercase))[:n]
+
+    neighbors = []
+
+    for i in range(0, n):
+        for j in range(i + 1, n):
+            for l in range(j + 1, n):
+                new_assignment = old_assignment.copy()
+                new_assignment[positive_var[i]] = abs(
+                    1 - new_assignment[positive_var[i]])
+                new_assignment[positive_var[i].upper()] = abs(
+                    1 - new_assignment[positive_var[i].upper()])
+                new_assignment[positive_var[j]] = abs(
+                    1 - new_assignment[positive_var[i]])
+                new_assignment[positive_var[j].upper()] = abs(
+                    1 - new_assignment[positive_var[i].upper()])
+                new_assignment[positive_var[l]] = abs(
+                    1 - new_assignment[positive_var[i]])
+                new_assignment[positive_var[l].upper()] = abs(
+                    1 - new_assignment[positive_var[i].upper()])
+
+                neighbors.append(new_assignment)
 
     return neighbors
 
@@ -70,9 +119,9 @@ def hillClimbing(set, n, m):
 
         node = None
 
-        neigbors = generateNeigbors(currNode.assignment, n)
+        neighbors = generateNeighbors(currNode.assignment, n)
 
-        for neighbor in neigbors:
+        for neighbor in neighbors:
             heuristic = calcHeuristic(set, neighbor)
 
             if heuristic >= maxHeuristic:
@@ -109,8 +158,8 @@ def beamSearch(set, w, n, m):
 
         # print(currNode.assignment, currNode.heuristic)
 
-        neigbors = generateNeigbors(currNode.assignment, n)
-        for neighbor in neigbors:
+        neighbors = generateNeighbors(currNode.assignment, n)
+        for neighbor in neighbors:
             if neighbor not in closed:
                 heuristic = calcHeuristic(set, neighbor)
                 if len(open) == w:
@@ -123,8 +172,8 @@ def beamSearch(set, w, n, m):
                 closed.append(neighbor)
 
         for node in open:
-            neigbors = generateNeigbors(node.assignment, n)
-            for neighbor in neigbors:
+            neighbors = generateNeighbors(node.assignment, n)
+            for neighbor in neighbors:
                 if neighbor not in closed:
                     heuristic = calcHeuristic(set, neighbor)
                     if len(open) == w:
@@ -140,8 +189,42 @@ def beamSearch(set, w, n, m):
     return None
 
 
-def variableNeigborhoodDescent(set, m, n):
-    pass
+def variableNeigborhoodDescent(set, n, m, kMax):
+    assignment = getInitialAssignments(n)
+    heuristic = calcHeuristic(set, assignment)
+
+    maxHeuristic = heuristic
+    currNode = satNode(assignment, heuristic)
+
+    k = 1
+
+    while k <= kMax:
+        if currNode.heuristic == m:
+            return currNode.assignment
+
+        node = None
+
+        if k == 1:
+            neighbors = generateNeighbors(currNode.assignment, n)
+        elif k == 2:
+            neighbors = generateNeighbors2(currNode.assignment, n)
+        elif k == 3:
+            neighbors = generateNeighbors3(currNode.assignment, n)
+
+        for neighbor in neighbors:
+            heuristic = calcHeuristic(set, neighbor)
+
+            if heuristic >= maxHeuristic:
+                node = neighbor
+                maxHeuristic = heuristic
+
+        if node is None:
+            k += 1
+        else:
+            currNode = satNode(node, maxHeuristic)
+            k = 1
+
+    return None
 
 
 def tabuSearch(set, m, n):
@@ -185,6 +268,13 @@ if __name__ == '__main__':
     else:
         print("Solution not found")
     result = beamSearch(set, 3, n, m)
+    if result is not None:
+        print("\nSolution is: ", end="")
+        print(result)
+        print()
+    else:
+        print("Solution not found")
+    result = variableNeigborhoodDescent(set, n, m, 3)
     if result is not None:
         print("\nSolution is: ", end="")
         print(result)
