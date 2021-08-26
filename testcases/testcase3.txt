@@ -1,0 +1,11 @@
+2
+8
+7
+e g 
+c d 
+d G 
+B G 
+C D 
+e A 
+g D 
+b D 

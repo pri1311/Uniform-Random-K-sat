@@ -140,5 +140,57 @@ def getBestNeigbor(set, neighbors):
     return node, maxHeuristic, i, j
 
 
+def testCasesOrRandom():
+    print('1. Run Test Cases')
+    print('2. Solve Uniform Random K - Sat')
+    choice = int(input())
+
+    if choice == 2:
+        return False
+    return True
+
+
+def printAlgorithmOptions():
+    print('1. Hill Climbing')
+    print('2. Beam Search')
+    print('3. Variable Neighborhood Descent')
+    print('4. Tabu Search')
+
+
+def printResult(result):
+    if result is not None:
+        print("\nSolution is: ", end="")
+        print(result)
+        print()
+    else:
+        print("Solution not found")
+
+
+def printInitial(set, n):
+    print(set)
+    print("Initial Assignment is: ", end="")
+    assignment = getInitialAssignments(n)
+    print(assignment)
+    print("Initial Heuristic Value is: ", end="")
+    print(calcHeuristic(set, assignment))
+
+
+def readTestCase(choice):
+    testcase = []
+
+    with open('./testcases/testcase' + str(choice) + '.txt', 'r') as f:
+        testcase = f.readlines()
+
+    k = int(testcase[0])
+    m = int(testcase[1])
+    n = int(testcase[2])
+    set = []
+
+    for i in range(3, len(testcase)):
+        set.append(testcase[i].split(' ')[:-1])
+
+    return k, m, n, set
+
+
 def func(node):
     return node.heuristic

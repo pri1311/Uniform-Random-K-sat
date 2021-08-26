@@ -9,7 +9,12 @@ from helper import (
     generateNeighbors3,
     generateTabuNeighbors,
     getBestNeigbor,
-    func
+    func,
+    readTestCase,
+    testCasesOrRandom,
+    printAlgorithmOptions,
+    printResult,
+    printInitial,
 )
 
 
@@ -39,7 +44,7 @@ def hillClimbing(set, n, m):
         for neighbor in neighbors:
             heuristic = calcHeuristic(set, neighbor)
 
-            if heuristic >= maxHeuristic:
+            if heuristic > maxHeuristic:
                 node = neighbor
                 maxHeuristic = heuristic
 
@@ -134,7 +139,7 @@ def variableNeigborhoodDescent(set, n, m, kMax):
             if neighbor not in closed:
                 heuristic = calcHeuristic(set, neighbor)
 
-                if heuristic >= maxHeuristic:
+                if heuristic > maxHeuristic:
                     node = neighbor
                     maxHeuristic = heuristic
 
@@ -186,65 +191,44 @@ def tabuSearch(set, m, n, tenure):
                 return None
 
 
+def runAlgorithms(set, k, m, n, choice):
+    printInitial(set, n)
+
+    if choice == 1:
+        printResult(hillClimbing(set, n, m))
+
+    elif choice == 2:
+        width = int(input('Enter the beam width: '))
+        printResult(beamSearch(set, width, n, m))
+
+    elif choice == 3:
+        printResult(variableNeigborhoodDescent(set, n, m, 3))
+
+    elif choice == 4:
+        printResult(tabuSearch(set, m, n, 2))
+
+
 if __name__ == '__main__':
-    k = int(input("Enter length of each clause: "))
-    m = int(input("Enter the number of clauses: "))
-    n = int(input("Enter the number of variables: "))
 
-    sets = generateKSat(k, m, n, 3)
-    for set in sets:
-        # time.sleep(1)
-        print()
-        print(set)
-        assign = getInitialAssignments(n)
-        print(assign)
-        heuristic = calcHeuristic(set, assign)
-        print(heuristic)
-        # result = variableNeigborhoodDescent(set, n, m, 3)
-        result = tabuSearch(set, m, n, 2)
-        if result is not None:
-            print("\nSolution is: ", end="")
-            print(result)
-            print()
-        else:
-            print("Solution not found")
-        # result = beamSearch(set, 3, n, m)
-        # if result is not None:
-        #     print("\nSolution is: ", end="")
-        #     print(result)
-        #     print()
-        # else:
-        #     print("Solution not found")
-    # Gives different solutions for beam search and Hill Climbing
-    # set = [['D', 'G', 'J'], ['C', 'H', 'I'], ['c', 'h', 'I'], ['c', 'i', 'J']]
-    # set = [['b', 'B', 'C'], ['D', 'E', 'I'], [
-    #     'a', 'd', 'B'], ['C', 'D', 'F']]  # 3 4 10
-    # print(set)
-    # assign = getInitialAssignments(n)
-    # print(assign)
-    # heuristic = calcHeuristic(set, assign)
-    # print(heuristic)
-    # result = hillClimbing(set, n, m)
-    # if result is not None:
-    #     print("\nSolution is: ", end="")
-    #     print(result)
-    #     print()
-    # else:
-    #     print("Solution not found")
-    # result = beamSearch(set, 3, n, m)
-    # if result is not None:
-    #     print("\nSolution is: ", end="")
-    #     print(result)
-    #     print()
-    # else:
-    #     print("Solution not found")
-    # result = variableNeigborhoodDescent(set, n, m, 3)
-    # if result is not None:
-    #     print("\nSolution is: ", end="")
-    #     print(result)
-    #     print()
-    # else:
-    #     print("Solution not found")
-    print(len(sets))
+    if testCasesOrRandom() == False:
 
-# 2 6 5
+        k = int(input("Enter length of each clause: "))
+        m = int(input("Enter the number of clauses: "))
+        n = int(input("Enter the number of variables: "))
+
+        printAlgorithmOptions()
+
+        choice = int(input())
+
+        sets = generateKSat(k, m, n, 5)
+
+        for set in sets:
+            runAlgorithms(set, k, m, n, choice)
+
+    else:
+        testcase = int(input())
+        k, m, n, set = readTestCase(testcase)
+        printAlgorithmOptions()
+
+        choice = int(input())
+        runAlgorithms(set, k, m, n, choice)
