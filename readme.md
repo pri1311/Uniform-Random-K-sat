@@ -24,3 +24,5 @@ Variable Neighborhood Descent:
 -- When Neighborhood function is incorporated with Hill Climbing algorithm, it gives rise to Variable Neighborhood Descent
 -- Good explanation Flowchart - https://www.researchgate.net/profile/Daniel-Guimarans/publication/236455075/figure/fig3/AS:299416671014914@1448397905299/Variable-Neighborhood-Descent-VND.png
 
+Tabu Search:
+-- Tabu Tenure - period before a bit can be flipped again
