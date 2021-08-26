@@ -139,7 +139,7 @@ def variableNeigborhoodDescent(set, n, m, kMax):
             if neighbor not in closed:
                 heuristic = calcHeuristic(set, neighbor)
 
-                if heuristic > maxHeuristic:
+                if heuristic >= maxHeuristic:
                     node = neighbor
                     maxHeuristic = heuristic
 
