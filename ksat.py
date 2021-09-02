@@ -3,11 +3,29 @@ from itertools import combinations, permutations
 from random import shuffle, sample
 
 
+def filterClauses(k, clauses):
+    resultClauses = []
+
+    for clause in clauses:
+        hashMap = []
+        valid = True
+        for i in range(0, k):
+            if clause[i].lower() in hashMap:
+                valid = False
+                break
+            hashMap.append(clause[i].lower())
+
+        if valid:
+            resultClauses.append(clause)
+
+    return resultClauses
+
+
 def generateKSat(k, m, n, limit=None):
     if limit is None:
         limit = 10
 
-    if 2 * n < k:
+    if n < k:
         raise ValueError("Invalid Constraints")
     positive_var = (list(ascii_lowercase))[:n]
     negative_var = [c.upper() for c in positive_var]
@@ -15,6 +33,8 @@ def generateKSat(k, m, n, limit=None):
 
     clauses = list(combinations(variables, k))
     # tempSets = list(permutations(clauses, m))
+
+    clauses = filterClauses(k, clauses)
 
     tempSets = []
 
@@ -26,8 +46,8 @@ def generateKSat(k, m, n, limit=None):
             i += 1
             tempSets.append(list(c))
 
-    shuffle(tempSets)
-    tempSets = tempSets[:limit]
+    # shuffle(tempSets)
+    # tempSets = tempSets[:limit]
 
     sets = []
 
@@ -45,5 +65,7 @@ if __name__ == '__main__':
     n = int(input("Enter the number of variables: "))
 
     sets = generateKSat(k, m, n)
+
+    print(len(sets))
     for set in sets:
         print(set)

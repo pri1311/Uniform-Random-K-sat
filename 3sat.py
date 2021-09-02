@@ -139,7 +139,7 @@ def variableNeigborhoodDescent(set, n, m, kMax):
             if neighbor not in closed:
                 heuristic = calcHeuristic(set, neighbor)
 
-                if heuristic >= maxHeuristic:
+                if heuristic > maxHeuristic:
                     node = neighbor
                     maxHeuristic = heuristic
 
@@ -218,7 +218,7 @@ if __name__ == '__main__':
 
         printAlgorithmOptions()
 
-        choice = int(input())
+        choice = int(input("Enter the Algorithm to be run:(1-4) "))
 
         sets = generateKSat(k, m, n, 5)
 
@@ -230,5 +230,5 @@ if __name__ == '__main__':
         k, m, n, set = readTestCase(testcase)
         printAlgorithmOptions()
 
-        choice = int(input())
+        choice = int(input("Enter the testcase to be run:(1-5) "))
         runAlgorithms(set, k, m, n, choice)
