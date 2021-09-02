@@ -32,7 +32,6 @@ def generateKSat(k, m, n, limit=None):
     variables = positive_var + negative_var
 
     clauses = list(combinations(variables, k))
-    # tempSets = list(permutations(clauses, m))
 
     clauses = filterClauses(k, clauses)
 
@@ -45,9 +44,6 @@ def generateKSat(k, m, n, limit=None):
         if c not in tempSets:
             i += 1
             tempSets.append(list(c))
-
-    # shuffle(tempSets)
-    # tempSets = tempSets[:limit]
 
     sets = []
 

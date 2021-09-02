@@ -220,15 +220,15 @@ if __name__ == '__main__':
 
         choice = int(input("Enter the Algorithm to be run:(1-4) "))
 
-        sets = generateKSat(k, m, n, 5)
+        sets = generateKSat(k, m, n, 10)
 
         for set in sets:
             runAlgorithms(set, k, m, n, choice)
 
     else:
-        testcase = int(input())
+        testcase = int(input("Enter the testcase to be run:(1-5) "))
         k, m, n, set = readTestCase(testcase)
         printAlgorithmOptions()
 
-        choice = int(input("Enter the testcase to be run:(1-5) "))
+        choice = int(input("Enter the Algorithm to be run:(1-4) "))
         runAlgorithms(set, k, m, n, choice)

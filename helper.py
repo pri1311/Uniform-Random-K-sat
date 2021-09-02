@@ -163,7 +163,7 @@ def printResult(result):
         print(result)
         print()
     else:
-        print("Solution not found")
+        print("\nSolution not found\n")
 
 
 def printInitial(set, n):
