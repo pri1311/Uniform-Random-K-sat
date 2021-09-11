@@ -60,13 +60,10 @@ def beamSearch(set, w, n, m):
     heuristic = calcHeuristic(set, assignment)
 
     open = []
-    closed = []
 
     initialNode = satNode(assignment, heuristic)
 
     open.append(initialNode)
-    closed.append(assignment)
-
     while len(open) > 0:
         open = sorted(open, key=func, reverse=True)
 
@@ -80,31 +77,27 @@ def beamSearch(set, w, n, m):
 
         neighbors = generateNeighbors(currNode.assignment, n)
         for neighbor in neighbors:
-            if neighbor not in closed:
-                heuristic = calcHeuristic(set, neighbor)
+            heuristic = calcHeuristic(set, neighbor)
+            if currNode.heuristic < heuristic:
                 if len(open) == w:
-                    if open[-1].heuristic <= heuristic:
+                    if open[-1].heuristic < heuristic:
                         open.pop()
                         open.append(satNode(neighbor, heuristic))
                 else:
                     open.append(satNode(neighbor, heuristic))
 
-                closed.append(neighbor)
-
         for node in open:
             neighbors = generateNeighbors(node.assignment, n)
             for neighbor in neighbors:
-                if neighbor not in closed:
-                    heuristic = calcHeuristic(set, neighbor)
+                heuristic = calcHeuristic(set, neighbor)
+                if currNode.heuristic < heuristic:
                     if len(open) == w:
-                        if open[-1].heuristic <= heuristic:
+                        if open[-1].heuristic < heuristic:
                             open.pop()
                             open.append(satNode(neighbor, heuristic))
                     else:
                         open.append(satNode(neighbor, heuristic))
                         open = sorted(open, key=func, reverse=True)
-
-                    closed.append(neighbor)
 
     return None
 
@@ -113,16 +106,19 @@ def variableNeigborhoodDescent(set, n, m, kMax):
     assignment = getInitialAssignments(n)
     heuristic = calcHeuristic(set, assignment)
 
-    closed = []
-
     maxHeuristic = heuristic
     currNode = satNode(assignment, heuristic)
-    closed.append(assignment)
 
     k = 1
 
     while k <= kMax:
-        print(k)
+        # if k == 1:
+        #     print("Searching in Sparse Neighborhood.")
+        # elif k == 2:
+        #     print(
+        #         "Solution not found in sparse neighborhood. Moving to a denser neigborhood.")
+        # else:
+        #     print("Solution not found in the sparse and dense neighborhood. Expanding the neighbornood to be more dense.")
         if currNode.heuristic == m:
             return currNode.assignment
 
@@ -136,18 +132,16 @@ def variableNeigborhoodDescent(set, n, m, kMax):
             neighbors = generateNeighbors3(currNode.assignment, n)
 
         for neighbor in neighbors:
-            if neighbor not in closed:
-                heuristic = calcHeuristic(set, neighbor)
+            heuristic = calcHeuristic(set, neighbor)
 
-                if heuristic > maxHeuristic:
-                    node = neighbor
-                    maxHeuristic = heuristic
+            if heuristic > maxHeuristic:
+                node = neighbor
+                maxHeuristic = heuristic
 
         if node is None:
             k += 1
         else:
             currNode = satNode(node, maxHeuristic)
-            closed.append(node)
             k = 1
 
     return None
@@ -220,13 +214,13 @@ if __name__ == '__main__':
 
         choice = int(input("Enter the Algorithm to be run:(1-4) "))
 
-        sets = generateKSat(k, m, n, 10)
+        sets = generateKSat(k, m, n, 20)
 
         for set in sets:
             runAlgorithms(set, k, m, n, choice)
 
     else:
-        testcase = int(input("Enter the testcase to be run:(1-5) "))
+        testcase = int(input("Enter the testcase to be run:(1-6) "))
         k, m, n, set = readTestCase(testcase)
         printAlgorithmOptions()
 

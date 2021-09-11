@@ -1,6 +1,6 @@
 from string import ascii_lowercase
 from itertools import combinations, permutations
-from random import shuffle, sample
+from random import sample
 
 
 def filterClauses(k, clauses):

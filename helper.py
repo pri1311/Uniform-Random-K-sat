@@ -17,11 +17,12 @@ def getInitialAssignments(n):
     negative_var = [c.upper() for c in positive_var]
     variables = positive_var + negative_var
 
-    # positive_assgn = [randint(0, 1) for i in range(0, n)]
-    # negative_assgn = [abs(1 - i) for i in positive_assgn]
+    positive_assgn = [randint(0, 1) for i in range(0, n)]
 
-    positive_assgn = [1 for i in range(0, n)]
-    negative_assgn = [0 for i in positive_assgn]
+    negative_assgn = [abs(1 - i) for i in positive_assgn]
+
+    # positive_assgn = [1 for i in range(0, n)]
+    # negative_assgn = [0 for i in positive_assgn]
 
     assignment = dict(zip(variables, positive_assgn + negative_assgn))
     return assignment
@@ -167,7 +168,8 @@ def printResult(result):
 
 
 def printInitial(set, n):
-    print(set)
+    # print(set)
+    prettyPrint(set)
     print("Initial Assignment is: ", end="")
     assignment = getInitialAssignments(n)
     print(assignment)
@@ -194,3 +196,18 @@ def readTestCase(choice):
 
 def func(node):
     return node.heuristic
+
+
+def prettyPrint(set):
+    n = len(set)
+    m = len(set[0])
+    for i in range(0, n):
+        print("(", end="")
+        for j in range(0, m):
+            if (j < m - 1):
+                print(set[i][j], end=" ∨ ")
+            else:
+                print(set[i][j], end=")")
+        if i < n - 1:
+            print(" ∧ ", end="")
+    print()
