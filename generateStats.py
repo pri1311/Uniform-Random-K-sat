@@ -25,7 +25,8 @@ if __name__ == '__main__':
         if result is not None:
             bs3 += 1
     end = time.time()
-    print("Beam Search with width 3 took " + str(end - start) + "s to run 1000 instances")
+    print("Beam Search with width 3 took " +
+          str(end - start) + "s to run 1000 instances")
 
     start = time.time()
     for set in sets:

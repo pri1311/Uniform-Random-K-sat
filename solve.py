@@ -147,6 +147,43 @@ def variableNeigborhoodDescent(set, n, m, kMax):
     return None
 
 
+# def tabuSearch(set, m, n, tenure):
+#     assignment = getInitialAssignments(n)
+#     heuristic = calcHeuristic(set, assignment)
+#     memory = [0 for i in range(0, n)]
+
+#     tabuList = []
+
+#     currNode = satNode(assignment, heuristic)
+#     tabuList.append(assignment)
+
+#     while True:
+#         if currNode.heuristic == m:
+#             return currNode.assignment
+
+#         for i in range(0, n):
+#             if memory[i] > 0:
+#                 memory[i] -= 1
+
+#         neighbors = generateTabuNeighbors(
+#             currNode.assignment, n, memory)
+
+#         if len(neighbors) == 0:
+#             return None
+
+#         while True:
+#             node, heuristic, i, j = getBestNeigbor(set, neighbors)
+#             neighbors.remove((node, i, j))
+
+#             if node not in tabuList:
+#                 currNode = satNode(node, heuristic)
+#                 tabuList.append(node)
+#                 memory[i] = memory[j] = tenure
+#                 break
+
+#             elif len(neighbors) == 0:
+#                 return None
+
 def tabuSearch(set, m, n, tenure):
     assignment = getInitialAssignments(n)
     heuristic = calcHeuristic(set, assignment)
@@ -155,11 +192,12 @@ def tabuSearch(set, m, n, tenure):
     tabuList = []
 
     currNode = satNode(assignment, heuristic)
+    bestNode = currNode
+    steps = 0
     tabuList.append(assignment)
 
-    while True:
-        if currNode.heuristic == m:
-            return currNode.assignment
+    while steps < 5000 and bestNode.heuristic != m:
+        steps += 1
 
         for i in range(0, n):
             if memory[i] > 0:
@@ -171,18 +209,23 @@ def tabuSearch(set, m, n, tenure):
         if len(neighbors) == 0:
             return None
 
-        while True:
-            node, heuristic, i, j = getBestNeigbor(set, neighbors)
-            neighbors.remove((node, i, j))
+        node, heuristic, i, j = getBestNeigbor(set, neighbors)
+        neighbors.remove((node, i, j))
 
-            if node not in tabuList:
-                currNode = satNode(node, heuristic)
-                tabuList.append(node)
-                memory[i] = memory[j] = tenure
-                break
+        if heuristic > bestNode.heuristic:
+            bestNode = satNode(node, heuristic)
+            currNode = satNode(node, heuristic)
+            memory[i] = memory[j] = tenure
 
-            elif len(neighbors) == 0:
-                return None
+        else:
+            currNode = satNode(node, heuristic)
+            memory[i] = memory[j] = tenure
+
+    if bestNode.heuristic == m:
+        return bestNode.assignment
+
+    else:
+        return None
 
 
 def runAlgorithms(set, k, m, n, choice):
